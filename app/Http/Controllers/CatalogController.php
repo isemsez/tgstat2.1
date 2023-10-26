@@ -7,6 +7,7 @@ use App\Services\ChannelCard;
 use App\Services\Data;
 use Exception;
 use Illuminate\Contracts\View\View;
+use Inertia\Response;
 
 class CatalogController extends Controller
 {
@@ -15,9 +16,10 @@ class CatalogController extends Controller
     /**Return main page of the site.
      *
      * @param Peer $model
-     * @return View
+     * @return Response
+     * @throws Exception
      */
-    public function main_page(Peer $model): View
+    public function main_page(Peer $model): Response
     {
         $many = 3*4; # number of channels in card
 
@@ -25,8 +27,9 @@ class CatalogController extends Controller
             $model->popular_channels($many),
             to_split: 4
         );
+        $popular_title = 'popular';
 
-     # categories
+/*     # categories
         $db_data_categ = $model->popular_categories( how_many: 8*4);
         foreach ($db_data_categ as $category_str) {
             $category_str['count'] = Data::kilo_style($category_str['count']);
@@ -37,12 +40,14 @@ class CatalogController extends Controller
      # popular channels in each given category
         $data_by_categ = $model->top_by_categories(
             ['blogs', 'news', 'travels', 'politics', 'economics', 'education'], $many
-        );
+        );*/
 
-        return view('pages.popular', [
-                'channels'            => $popular_channels,
-                'categories'          => $all_categories,
-                'specific_categories' => ChannelCard::prepare_by_category($data_by_categ, to_split: 4),
+        return inertia('MainPage', [
+                'popular' => ['title'            => $popular_title,
+                              'friendly_title'   => Data::friendly_name($popular_title),
+                              'grouped_channels' => $popular_channels],
+//                'categories'          => $all_categories,
+//                'specific_categories' => ChannelCard::prepare_by_category($data_by_categ, to_split: 4),
             ]
         );
     }
