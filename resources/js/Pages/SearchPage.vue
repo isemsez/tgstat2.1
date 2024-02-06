@@ -5,7 +5,7 @@ import axios from "axios";
 import Select2 from "@/Pages/Components/Select2.vue";
 
 $(document).ready(function() {
-    $('.select2-multiple').select2();
+    $('.select2-multiple').select2({});
 });
 
 export default {
@@ -146,7 +146,7 @@ export default {
                                         <div class="form-group field-categories">
 
                                             <label class="control-label" for="categories">Тематика канала</label>
-                                            <input type="hidden" name="categories" value="">
+                                            <input type="hidden" name="categories" value="some">
 
 
 

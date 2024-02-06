@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Exceptions\DropdownSourceElementException;
+use App\Http\Requests\AddChannelRequest;
 use App\Http\Requests\SearchRequest;
 use App\Models\Peer;
 use App\Services\Data;
@@ -65,16 +67,26 @@ class ApiController extends Controller
             ]]);
         }
 
-/*
+        throw new DropdownSourceElementException();
+    }
 
 
-        foreach ($channels as $channel) {
-            $channel['img'] = ChannelCard::ava_url_path($channel['alias']);
-            $channel['subscribers'] = number_format($channel['subscribers'], thousands_separator: ' ');
-            $channel['last_post_date'] = ChannelCard::post_since_str($channel['last_post_date']);
+    /**
+     * Adds new channel..
+     *
+     * @throws Exception
+     */
+    public function add_channel(Peer $model, AddChannelRequest $request)
+    {
+        $main_header = 'Добавить канал';
+
+        try {
+            $model->add_channel($request->prepared_data);
+        } catch (Exception $e) {
+            throw new Exception($e->getMessage());
         }
-*/
-//        return view('pages.search', ['channels' => $channels]);
+
+        return response()->json(['status'=>'ok', 'data'=>compact('main_header')]);
     }
 
 }
