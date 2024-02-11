@@ -9,6 +9,8 @@ use MongoDB\Laravel\Eloquent\Model;
 
 class Peer extends Model
 {
+    protected $collection = 'peers';
+
     protected $guarded = ['*'];
 
 

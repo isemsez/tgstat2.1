@@ -49,7 +49,9 @@ class ApiController extends Controller
      */
     public function search_page(Peer $model): JsonResponse
     {
-        if ('dropdownInitial' == request()->post('sourceElement')) {
+        $page_source_element = request()->post('sourceElement');
+
+        if ('dropdownInitial' == $page_source_element) {
             $db_dropdown = $model->categories_dropdown(null);
             $dropdown_data = PrepareData::dropdown_categories($db_dropdown);
             PrepareData::sort_by_column($dropdown_data, 'text');
@@ -57,7 +59,7 @@ class ApiController extends Controller
             return response()->json(['status'=>'ok','data'=>$dropdown_data ]);
         }
 
-        if ( 'searchQuery' == request()->post('sourceElement') ) {
+        if ( 'searchQuery' == $page_source_element ) {
             $request = resolve(SearchRequest::class);
             [$db_channels, $total_count] = $model->search($request->validated(), how_many: Data::AMOUNT_ON_SEARCH_PAGE);
             $channels = PrepareData::channels_container($db_channels);
@@ -67,7 +69,7 @@ class ApiController extends Controller
             ]]);
         }
 
-        throw new DropdownSourceElementException();
+        throw new DropdownSourceElementException("Wrong page_source_element: '$page_source_element'.");
     }
 
 
